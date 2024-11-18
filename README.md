@@ -4,6 +4,8 @@ This repository contains a project that replicates the user interface (UI) of th
 
 ### You can view the calculator [here](https://paulkabzz.github.io/scientific-calc/).
 
+![calculator image](/images/img.png)
+
 ## Technologies
 - **HTML/CSS**: For layout and styling.
 - **TypeScript**: Strongly-typed implementation for JavaScript.
