@@ -1,0 +1,127 @@
+@font-face {
+  font-family: SF-Pro;
+  src: url(/fonts/sf-pro-display/SFPRODISPLAYREGULAR.OTF);
+}
+
+:root {
+  /* CSS HEX Color Palette */
+  --princeton-orange: #ff9500; /*Operators */
+  --dim-gray: #6c6b6a; /*Functions */
+  --taupe-gray: #9a9898; /* Special Functions*/
+  --davys-gray: #525150; /*Body */
+  --gray: #7b7a79; /* Numbers, etc. */
+  --white: #ededed; /* Text */
+}
+
+* {
+  font-family: "SF-Pro", sans-serif;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+  color: var(--white);
+  list-style: none;
+  text-decoration: none;
+}
+
+.wrapper {
+  min-width: 400px;
+  max-width: 580px;
+  border-radius: 10px;
+  width: 100%;
+  min-height: 360px;
+  background-color: var(--davys-gray);
+  position: absolute;
+  top: 20%;
+ left: 20%;
+  box-shadow: -1px 25px 44px 8px rgba(0, 0, 0, 0.41);
+  -webkit-box-shadow: -1px 25px 44px 8px rgba(0, 0, 0, 0.41);
+  -moz-box-shadow: -1px 25px 44px 8px rgba(0, 0, 0, 0.41);
+  display: flex;
+  flex-direction: column;
+}
+
+.display {
+  width: 100%;
+  height: 100px;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 6px;
+}
+
+.display .result {
+    height: 50%;
+    width: 100%;
+    font-size: 20px;
+    color: #aba9a9;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.display .operations {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    font-size: 35px;
+}
+
+.buttons-container {
+  width: 100%;
+  height: 260px;
+  border-radius: 0 0 10px 10px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  grid-column-gap: 4px;
+  grid-row-gap: 6px;
+  padding: 6px;
+}
+
+.button:last-child {
+    grid-area: 5 / 9 / 6 / 11;
+}
+
+.button {
+    border-radius: 30px;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.button.function, .button.paren {
+    background-color: var(--dim-gray);
+}
+
+.button.number, .button.period {
+    background-color: var(--gray);
+}
+
+.button.operator {
+    background-color: var(--princeton-orange);
+}
+
+.button.special-function {
+    background-color: var(--taupe-gray);
+}
+
+.button.secondFunctionActive {
+    background-color: #eaeaeada;
+}
+
+
+#header {
+    width: 100% ;
+    height: 40px;
+    position: relative;
+    z-index: 10;
+}
