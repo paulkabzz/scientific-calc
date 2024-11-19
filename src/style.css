@@ -5,7 +5,7 @@
 
 :root {
   /* CSS HEX Color Palette */
-  --princeton-orange: #ff9500; /*Operators */
+  --orange: #ff9500; /*Operators */
   --dim-gray: #6c6b6a; /*Functions */
   --taupe-gray: #9a9898; /* Special Functions*/
   --davys-gray: #525150; /*Body */
@@ -25,8 +25,9 @@
   color: var(--white);
   list-style: none;
   text-decoration: none;
-
 }
+
+/* Calculator Body Styles */
 
 .wrapper {
   min-width: 400px;
@@ -44,6 +45,15 @@
   display: flex;
   flex-direction: column;
 }
+
+#header {
+  width: 100% ;
+  height: 40px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Displays Styles */
 
 .display {
   width: 100%;
@@ -74,6 +84,8 @@
     align-items: flex-end;
     font-size: 35px;
 }
+
+/* Buttons */
 
 .buttons-container {
   width: 100%;
@@ -108,7 +120,7 @@
 }
 
 .button.operator {
-    background-color: var(--princeton-orange);
+    background-color: var(--orange);
 }
 
 .button.special-function {
@@ -117,12 +129,4 @@
 
 .button.secondFunctionActive {
     background-color: #eaeaeada;
-}
-
-
-#header {
-    width: 100% ;
-    height: 40px;
-    position: relative;
-    z-index: 10;
 }
