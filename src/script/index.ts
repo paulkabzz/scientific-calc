@@ -51,7 +51,7 @@ const buttonLayout: CalculatorButton[] = [
     { value: "mr", type: 'function', press: '', display: 'mr' },
     { value: "AC", type: 'function', press: '', display: 'AC' },
     { value: "%", type: 'function', press: '/100', display: '%' },
-    { value: "+/-", type: 'function', press: '*(-1)', display: '±' },
+    { value: "+/-", type: 'function', press: 'negate(', display: '-' },
     { value: "÷", type: 'operator', press: '/', display: '÷' },
 
     // Row 2
@@ -114,6 +114,7 @@ const MathUtils = {
         }
         return result;
     },
+    negate: (n: number): number => -1*n,
     formatNumber: (num: number): string => {
         return Number.isInteger(num) ? num.toString() : Number(num.toPrecision(10)).toString();
     }
@@ -145,6 +146,14 @@ class Calculator {
         state.computationString = `factorial(${numberToFactorial})`;
         state.lastNumber = null;
         updateDisplay();
+    }
+
+    static handleNegation(): void {
+       const numberToNEgate = state.lastNumber || state.lastResult?.toString() || '0';
+       state.currentDisplay = `-(${numberToNEgate})`;
+       state.computationString = `negate(${numberToNEgate})`;
+       state.lastNumber = null;
+       updateDisplay();
     }
 
     static handleEquals(): void {
@@ -236,8 +245,10 @@ function evaluateExpression(expr: string): number {
         return new Function(
             ...Object.keys(mathContext),
             'factorial',
+            'negate',
             `return ${processedExpr}`
-        )(...Object.values(mathContext), MathUtils.factorial);
+        )(...Object.values(mathContext), MathUtils.factorial, MathUtils.negate
+    );
     } catch (error) {
         console.error('Evaluation error:', error);
         return NaN;
@@ -366,6 +377,9 @@ function handleButtonClick(buttonDetail: CalculatorButton, button: HTMLElement):
             break;
         case '=':
             Calculator.handleEquals();
+            break;
+        case '+/-':
+            Calculator.handleNegation();
             break;
         default:
             handleRegularButton(buttonDetail);
