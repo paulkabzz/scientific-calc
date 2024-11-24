@@ -41,7 +41,7 @@ interface CalculatorButton {
 }
 
 // Calculator Layout Configuration
-const buttonLayout: CalculatorButton[] = [
+const buttonLayout: CalculatorButton[] = [ 
     // Row 1
     { value: "(", type: 'paren', press: '(', display: '(' },
     { value: ")", type: 'paren', press: ')', display: ')' },
@@ -59,7 +59,7 @@ const buttonLayout: CalculatorButton[] = [
     { value: "x²", type: 'function', press: '**2', display: '²', secondFunction: "x⁻²", secondFnPress: '**(-2)', secondFnDisplay: '⁻²' },
     { value: "x³", type: 'function', press: '**3', display: '³', secondFunction: "x⁻³", secondFnPress: '**(-3)', secondFnDisplay: '⁻³' },
     { value: "xʸ", type: 'function', press: '**', display: '^', secondFunction: "ʸ√x", secondFnPress: '**(1/', secondFnDisplay: '√' },
-    { value: "eˣ", type: 'function', press: 'Math.exp(', display: 'e^', secondFunction: "yˣ", secondFnPress: '**', secondFnDisplay: '^' },
+    { value: "eˣ", type: 'function', press: 'Math.exp(', display: 'e^(', secondFunction: "yˣ", secondFnPress: '**', secondFnDisplay: '^' },
     { value: "10ˣ", type: 'function', press: '10**', display: '10^', secondFunction: "2ˣ", secondFnPress: '2**', secondFnDisplay: '2^' },
     { value: "7", type: 'number', press: '7', display: '7' },
     { value: "8", type: 'number', press: '8', display: '8' },
@@ -68,11 +68,11 @@ const buttonLayout: CalculatorButton[] = [
 
     // Row 3
     { value: "x⁻¹", type: 'function', press: '**(-1)', display: '⁻¹', secondFunction: "x", secondFnPress: '', secondFnDisplay: 'x' },
-    { value: "²√x", type: 'function', press: 'Math.sqrt(', display: '√' },
-    { value: "³√x", type: 'function', press: 'Math.cbrt(', display: '∛' },
+    { value: "²√x", type: 'function', press: 'Math.sqrt(', display: '√(' },
+    { value: "³√x", type: 'function', press: 'Math.cbrt(', display: '∛(' },
     { value: "ʸ√x", type: 'function', press: '**(1/', display: '√' },
-    { value: "logᵧ", type: 'function', press: 'Math.log(', display: 'log_', secondFunction: "ln", secondFnPress: 'Math.log(', secondFnDisplay: 'ln(' },
-    { value: "log₂", type: 'function', press: 'Math.log2(', display: 'log₂', secondFunction: "log", secondFnPress: 'Math.log10(', secondFnDisplay: 'log' },
+    { value: "logᵧ", type: 'function', press: 'Math.log(', display: 'log(', secondFunction: "ln", secondFnPress: 'Math.log(', secondFnDisplay: 'ln(' },
+    { value: "log₂", type: 'function', press: 'Math.log2(', display: 'log₂(', secondFunction: "log", secondFnPress: 'Math.log10(', secondFnDisplay: 'log(' },
     { value: "4", type: 'number', press: '4', display: '4' },
     { value: "5", type: 'number', press: '5', display: '5' },
     { value: "6", type: 'number', press: '6', display: '6' },
@@ -107,9 +107,13 @@ const MathUtils = {
     degToRad: (degrees: number): number => degrees * (Math.PI / 180),
     radToDeg: (radians: number): number => radians * (180 / Math.PI),
     factorial: (n: number): number => {
-        if (n < 0) return NaN;
+        // Convert to number if it's a string
+        const num = Number(n);
+        if (isNaN(num)) return NaN;
+        if (num < 0) return NaN;  // Prevent factorial of negative numbers
+        if (num === 0) return 1;
         let result = 1;
-        for (let i = Math.floor(n); i >= 1; i--) {
+        for (let i = Math.floor(num); i >= 1; i--) {
             result *= i;
         }
         return result;
@@ -139,15 +143,36 @@ class Calculator {
         state.lastNumber = randomNum.toString();
         updateDisplay();
     }
-
     static handleFactorial(): void {
-        const numberToFactorial = state.lastNumber || state.lastResult?.toString() || '0';
-        state.currentDisplay = `${numberToFactorial}!`;
-        state.computationString = `factorial(${numberToFactorial})`;
+        if (!state.currentDisplay && !state.lastResult) {
+            state.currentDisplay = '0';
+            state.computationString = '0';
+        }
+        
+        // Check if the current expression is negative
+        const isNegativeExpression = state.currentDisplay.trim().split("")[0]=== '−';
+        let currentExpression = isNegativeExpression ? 
+            state.currentDisplay.substring(1).trim() : 
+            state.currentDisplay.trim();
+        
+        // Remove any existing factorial symbols
+        currentExpression = currentExpression.replace(/!/g, '');
+        
+        // Construct the expressions
+        if (isNegativeExpression) {
+            state.currentDisplay = `−${currentExpression}!`; 
+            state.computationString = `negate(factorial(${currentExpression}))`;
+        } else {
+            state.currentDisplay = `${currentExpression}!`;
+            state.computationString = `factorial(${currentExpression})`;
+        }
+        
         state.lastNumber = null;
         updateDisplay();
     }
 
+
+    
     static handleNegation(): void {
        const numberToNEgate = state.lastNumber || state.lastResult?.toString() || '0';
        state.currentDisplay = `-(${numberToNEgate})`;
@@ -172,7 +197,7 @@ class Calculator {
             
             if (!isNaN(result)) {
                 state.lastResult = result;
-                state.currentDisplay = result.toString();
+                // state.currentDisplay = result.toString();
                 state.computationString = result.toString();
                 state.lastNumber = result.toString();
                 state.shouldStartFresh = true;
@@ -234,21 +259,22 @@ function evaluateExpression(expr: string): number {
         asinh: Math.asinh,
         acosh: Math.acosh,
         atanh: Math.atanh,
+
+        factorial: MathUtils.factorial,
+        negate: MathUtils.negate
     };
 
     try {
         const processedExpr = expr
             .replace(/Math\.(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|asinh|acosh|atanh|sqrt|cbrt|log|log10|log2|exp)\(/g, '$1(')
             .replace(/Math\.PI/g, 'PI')
-            .replace(/Math\.E/g, 'E');
+            .replace(/Math\.E/g, 'E')
+            .trim();
 
         return new Function(
             ...Object.keys(mathContext),
-            'factorial',
-            'negate',
-            `return ${processedExpr}`
-        )(...Object.values(mathContext), MathUtils.factorial, MathUtils.negate
-    );
+            `"use strict"; return ${processedExpr};`
+        )(...Object.values(mathContext));
     } catch (error) {
         console.error('Evaluation error:', error);
         return NaN;
@@ -402,8 +428,24 @@ function handleRegularButton(buttonDetail: CalculatorButton): void {
     const pressValue = state.isSecondFunctionActive && buttonDetail.secondFunction
         ? buttonDetail.secondFnPress
         : buttonDetail.press;
-        
+    
     if (pressValue) {
+        // Handle constants (e, π) being pressed multiple times
+        if (['e', 'π'].includes(buttonDetail.value) && state.currentDisplay) {
+                state.currentDisplay += '×';
+                state.computationString += '*';
+        }
+        
+        // Handle nested functions (sin, cos, tan, log, etc.)
+        else if (buttonDetail.type === 'function' && 
+                 ['sin', 'cos', 'tan', 'sinh', 'cosh', 'tanh', 'log', 'ln'].includes(buttonDetail.value)) {
+            // Don't add multiplication if it's a nested function
+            state.currentDisplay += displayValue;
+            state.computationString += pressValue;
+            updateDisplay();
+            return;
+        }
+        
         state.currentDisplay += displayValue;
         state.computationString += pressValue;
         updateDisplay();
@@ -412,3 +454,12 @@ function handleRegularButton(buttonDetail: CalculatorButton): void {
 
 // Start the calculator
 initializeCalculator();
+
+
+// f(x) = ln(2-x)^-1 +  sqrt(1+x)
+
+// ln(2-x): x != 2; x != 1 x< 2 -> ln(2-x) != 0 || ln(2-x) > 0
+// sqrt(1+x): x >= -1 -> sqrt(1+x) > 0
+
+// xE [-1 ,1) U (1, 2)
+
