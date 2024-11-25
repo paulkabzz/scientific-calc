@@ -112,7 +112,7 @@ const MathUtils = {
         if (num < 0 || !Number.isInteger(num)) return NaN;  // Prevent factorial of negative and non-interger values
         if (num === 0) return 1;
         let result = 1;
-        for (let i = Math.floor(num); i >= 1; i--) {
+        for (let i = num; i >= 1; i--) {
             result *= i;
         }
         return result;
