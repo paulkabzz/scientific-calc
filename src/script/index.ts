@@ -432,8 +432,8 @@ function handleRegularButton(buttonDetail: CalculatorButton): void {
     if (pressValue) {
         // Handle constants (e, π) being pressed multiple times
         if (['e', 'π'].includes(buttonDetail.value) && state.currentDisplay) {
-                state.currentDisplay += '×';
-                state.computationString += '*';
+                state.currentDisplay += '';
+                state.computationString += '';
         }
         
         // Handle nested functions (sin, cos, tan, log, etc.)
