@@ -111,11 +111,13 @@
     cursor: pointer;
 }
 
-.button.function, .button.paren {
+.button.function, 
+.button.paren {
     background-color: var(--dim-gray);
 }
 
-.button.number, .button.period {
+.button.number, 
+.button.period {
     background-color: var(--gray);
 }
 

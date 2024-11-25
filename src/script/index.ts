@@ -1,13 +1,12 @@
-// Import styles
 import '../style.css';
 
 // Core calculator state
 interface CalculatorState {
-    currentDisplay: string;
-    computationString: string;
-    lastNumber: string | null;
+    currentDisplay: string; // What the user sees on the screen
+    computationString: string; // What gets evaluated in the computation engine
+    lastNumber: string | null; // Tracks the last number entered by the user
     lastResult: number | null;
-    shouldStartFresh: boolean;
+    shouldStartFresh: boolean; // Indicates whether a new input should overwrite the current display or append to it
     isSecondFunctionActive: boolean;
     isRadianMode: boolean;
 }
@@ -67,7 +66,7 @@ const buttonLayout: CalculatorButton[] = [
     { value: "×", type: 'operator', press: '*', display: '×' },
 
     // Row 3
-    { value: "x⁻¹", type: 'function', press: '**(-1)', display: '⁻¹', secondFunction: "x", secondFnPress: '', secondFnDisplay: 'x' },
+    { value: "x⁻¹", type: 'function', press: '**(-1)', display: '⁻¹'},
     { value: "²√x", type: 'function', press: 'Math.sqrt(', display: '√(' },
     { value: "³√x", type: 'function', press: 'Math.cbrt(', display: '∛(' },
     { value: "ʸ√x", type: 'function', press: '**(1/', display: '√' },
@@ -110,7 +109,7 @@ const MathUtils = {
         // Convert to number if it's a string
         const num = Number(n);
         if (isNaN(num)) return NaN;
-        if (num < 0) return NaN;  // Prevent factorial of negative numbers
+        if (num < 0 || !Number.isInteger(num)) return NaN;  // Prevent factorial of negative and non-interger values
         if (num === 0) return 1;
         let result = 1;
         for (let i = Math.floor(num); i >= 1; i--) {
@@ -171,8 +170,6 @@ class Calculator {
         updateDisplay();
     }
 
-
-    
     static handleNegation(): void {
        const numberToNEgate = state.lastNumber || state.lastResult?.toString() || '0';
        state.currentDisplay = `-(${numberToNEgate})`;
@@ -183,23 +180,47 @@ class Calculator {
 
     static handleEquals(): void {
         try {
+
+            // If there is no computation string to evaluate, exit the method early.
             if (!state.computationString) return;
 
-            // Add missing closing parentheses if needed
-            const missingParens = (state.computationString.match(/\(/g) || []).length - 
-                                (state.computationString.match(/\)/g) || []).length;
+            /*
+            * Check for any missing parentheses in the computation string.
+            * - Parentheses must be balanced for the expression to be valid.
+            * - Count the number of opening parentheses '(' and closing parentheses ')'.
+            * - If there are more opening parentheses than closing ones, calculate the difference (missingParens).
+            * - Append the required number of closing parentheses ')' to the end of the computation string
+            *   to balance it.
+            */
+            const missingParens = (state.computationString.match(/\(/g) || []).length - (state.computationString.match(/\)/g) || []).length;
+                        
+            // Add the missing closing parentheses to both the computation string and the display.
             if (missingParens > 0) {
                 state.computationString += ')'.repeat(missingParens);
                 state.currentDisplay += ')'.repeat(missingParens);
             }
 
+            /*
+            * Evaluate the computation string.
+            * - Use 'evaluateExpression' to parse and calculate the result of the expression.
+            * - The result must be a valid number.
+            */
             const result = evaluateExpression(state.computationString);
             
             if (!isNaN(result)) {
+                // If the result is valid:
+                // - Update the last computed result.
                 state.lastResult = result;
+
                 // state.currentDisplay = result.toString();
+
+                // - Set the computation string to the result to prepare for the next calculation.
                 state.computationString = result.toString();
+
+                // - Update the last number used in the computation (useful for chaining operations).
                 state.lastNumber = result.toString();
+                            
+                // - Set the flag to start fresh for the next input.
                 state.shouldStartFresh = true;
             } else {
                 handleError();
@@ -231,6 +252,8 @@ function handleError(): void {
 
 // Expression Evaluation
 function evaluateExpression(expr: string): number {
+    // Define a mathematical context to contain constants and functions
+    // These are the only operations that will be accessible in the evaluated expression
     const mathContext = {
         // Constants
         E: Math.E,
@@ -265,16 +288,21 @@ function evaluateExpression(expr: string): number {
     };
 
     try {
+        // Preprocess the input expression to align it with the mathContext definitions
         const processedExpr = expr
+            // Replace any Math.<function> calls with just <function> to match mathContext keys
             .replace(/Math\.(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|asinh|acosh|atanh|sqrt|cbrt|log|log10|log2|exp)\(/g, '$1(')
             .replace(/Math\.PI/g, 'PI')
             .replace(/Math\.E/g, 'E')
             .trim();
 
+        // Dynamically create a function to evaluate the expression
+        // The function parameters are the keys of mathContext (e.g., 'PI', 'sqrt', etc.)
+        // The function body is the expression to be evaluated
         return new Function(
-            ...Object.keys(mathContext),
+            ...Object.keys(mathContext), // Pass the keys of mathContext as the function arguments
             `"use strict"; return ${processedExpr};`
-        )(...Object.values(mathContext));
+        )(...Object.values(mathContext));  // Pass the corresponding values of mathContext as arguments
     } catch (error) {
         console.error('Evaluation error:', error);
         return NaN;
@@ -413,10 +441,12 @@ function handleButtonClick(buttonDetail: CalculatorButton, button: HTMLElement):
 }
 
 function handleRegularButton(buttonDetail: CalculatorButton): void {
+    // If the button pressed is an operator, ensure the state does not reset
     if (buttonDetail.type === 'operator') {
-        state.shouldStartFresh = false;
+        state.shouldStartFresh = false; // Operators do not require clearing the display
     }
     
+    // If the button pressed is a number, append its value to the last number 
     if (buttonDetail.type === 'number') {
         state.lastNumber = (state.lastNumber || '') + buttonDetail.value;
     }
@@ -430,36 +460,22 @@ function handleRegularButton(buttonDetail: CalculatorButton): void {
         : buttonDetail.press;
     
     if (pressValue) {
-        // Handle constants (e, π) being pressed multiple times
-        if (['e', 'π'].includes(buttonDetail.value) && state.currentDisplay) {
-                state.currentDisplay += '';
-                state.computationString += '';
-        }
-        
-        // Handle nested functions (sin, cos, tan, log, etc.)
-        else if (buttonDetail.type === 'function' && 
+       
+        // Special case: Handle functions like sin, cos, tan, etc., without adding multiplication, this essentially allows nested functions
+        if (buttonDetail.type === 'function' && 
                  ['sin', 'cos', 'tan', 'sinh', 'cosh', 'tanh', 'log', 'ln'].includes(buttonDetail.value)) {
             // Don't add multiplication if it's a nested function
-            state.currentDisplay += displayValue;
+            state.currentDisplay += displayValue;  
             state.computationString += pressValue;
             updateDisplay();
             return;
         }
         
+        // Default case: Append both the display and computation values
         state.currentDisplay += displayValue;
         state.computationString += pressValue;
         updateDisplay();
     }
 }
-
 // Start the calculator
 initializeCalculator();
-
-
-// f(x) = ln(2-x)^-1 +  sqrt(1+x)
-
-// ln(2-x): x != 2; x != 1 x< 2 -> ln(2-x) != 0 || ln(2-x) > 0
-// sqrt(1+x): x >= -1 -> sqrt(1+x) > 0
-
-// xE [-1 ,1) U (1, 2)
-
