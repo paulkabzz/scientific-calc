@@ -156,6 +156,8 @@
     position: fixed !important;
     justify-content: space-between;
     background-color: var(--black);
+    padding-bottom: 3rem !important;
+
   }
 
   .button:not(.mobile) {
