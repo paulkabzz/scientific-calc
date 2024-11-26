@@ -37,6 +37,7 @@ interface CalculatorButton {
     secondFnDisplay?: string;
     secondFunction?: string;
     secondFnPress?: string;
+    mobile?: boolean
 }
 
 // Calculator Layout Configuration
@@ -48,34 +49,34 @@ const buttonLayout: CalculatorButton[] = [
     { value: "m+", type: 'function', press: '', display: 'm+' },
     { value: "m-", type: 'function', press: '', display: 'm-' },
     { value: "mr", type: 'function', press: '', display: 'mr' },
-    { value: "AC", type: 'function', press: '', display: 'AC' },
-    { value: "%", type: 'function', press: '/100', display: '%' },
-    { value: "+/-", type: 'function', press: 'negate(', display: '-' },
-    { value: "÷", type: 'operator', press: '/', display: '÷' },
+    { value: "AC", type: 'function', press: '', display: 'AC', mobile: true },
+    { value: "%", type: 'function', press: '/100', display: '%', mobile: true },
+    { value: "+/-", type: 'function', press: 'negate(', display: '-', mobile: true },
+    { value: "÷", type: 'operator', press: '/', display: '÷', mobile: true },
 
     // Row 2
     { value: "2ⁿᵈ", type: 'function', press: '', display: '2ⁿᵈ' },
     { value: "x²", type: 'function', press: '**2', display: '²', secondFunction: "x⁻²", secondFnPress: '**(-2)', secondFnDisplay: '⁻²' },
     { value: "x³", type: 'function', press: '**3', display: '³', secondFunction: "x⁻³", secondFnPress: '**(-3)', secondFnDisplay: '⁻³' },
-    { value: "xʸ", type: 'function', press: '**', display: '^', secondFunction: "ʸ√x", secondFnPress: '**(1/', secondFnDisplay: '√' },
+    { value: "xʸ", type: 'function', press: '**', display: '^', },
     { value: "eˣ", type: 'function', press: 'Math.exp(', display: 'e^(', secondFunction: "yˣ", secondFnPress: '**', secondFnDisplay: '^' },
     { value: "10ˣ", type: 'function', press: '10**', display: '10^', secondFunction: "2ˣ", secondFnPress: '2**', secondFnDisplay: '2^' },
-    { value: "7", type: 'number', press: '7', display: '7' },
-    { value: "8", type: 'number', press: '8', display: '8' },
-    { value: "9", type: 'number', press: '9', display: '9' },
-    { value: "×", type: 'operator', press: '*', display: '×' },
+    { value: "7", type: 'number', press: '7', display: '7', mobile: true },
+    { value: "8", type: 'number', press: '8', display: '8', mobile: true },
+    { value: "9", type: 'number', press: '9', display: '9', mobile: true },
+    { value: "×", type: 'operator', press: '*', display: '×', mobile: true },
 
     // Row 3
     { value: "x⁻¹", type: 'function', press: '**(-1)', display: '⁻¹'},
     { value: "²√x", type: 'function', press: 'Math.sqrt(', display: '√(' },
     { value: "³√x", type: 'function', press: 'Math.cbrt(', display: '∛(' },
     { value: "ʸ√x", type: 'function', press: '**(1/', display: '√' },
-    { value: "logᵧ", type: 'function', press: 'Math.log(', display: 'log(', secondFunction: "ln", secondFnPress: 'Math.log(', secondFnDisplay: 'ln(' },
+    { value: "logᵧ", type: 'function', press: 'logy', display: 'log(', secondFunction: "ln", secondFnPress: 'Math.log(', secondFnDisplay: 'ln(' },
     { value: "log₂", type: 'function', press: 'Math.log2(', display: 'log₂(', secondFunction: "log", secondFnPress: 'Math.log10(', secondFnDisplay: 'log(' },
-    { value: "4", type: 'number', press: '4', display: '4' },
-    { value: "5", type: 'number', press: '5', display: '5' },
-    { value: "6", type: 'number', press: '6', display: '6' },
-    { value: "−", type: 'operator', press: '-', display: '−' },
+    { value: "4", type: 'number', press: '4', display: '4', mobile: true },
+    { value: "5", type: 'number', press: '5', display: '5', mobile: true },
+    { value: "6", type: 'number', press: '6', display: '6', mobile: true },
+    { value: "−", type: 'operator', press: '-', display: '−', mobile: true },
 
     // Row 4
     { value: "x!", type: 'function', press: 'factorial(', display: '!' },
@@ -84,10 +85,10 @@ const buttonLayout: CalculatorButton[] = [
     { value: "tan", type: 'function', press: 'Math.tan(', display: 'tan(', secondFunction: "tan⁻¹", secondFnPress: 'Math.atan(', secondFnDisplay: 'tan⁻¹(' },
     { value: "e", type: 'function', press: 'Math.E', display: 'e' },
     { value: "EE", type: 'function', press: '*10**', display: 'E' },
-    { value: "1", type: 'number', press: '1', display: '1' },
-    { value: "2", type: 'number', press: '2', display: '2' },
-    { value: "3", type: 'number', press: '3', display: '3' },
-    { value: "+", type: 'operator', press: '+', display: '+' },
+    { value: "1", type: 'number', press: '1', display: '1', mobile: true },
+    { value: "2", type: 'number', press: '2', display: '2', mobile: true },
+    { value: "3", type: 'number', press: '3', display: '3', mobile: true },
+    { value: "+", type: 'operator', press: '+', display: '+', mobile: true },
 
     // Row 5
     { value: "sinh", type: 'function', press: 'Math.sinh(', display: 'sinh(', secondFunction: "sinh⁻¹", secondFnPress: 'Math.asinh(', secondFnDisplay: 'sinh⁻¹(' },
@@ -96,9 +97,9 @@ const buttonLayout: CalculatorButton[] = [
     { value: "π", type: 'function', press: 'Math.PI', display: 'π' },
     { value: "Rad", type: 'function', press: '', display: 'Rad', secondFunction: 'Deg', secondFnDisplay: 'Deg', secondFnPress: 'Deg'},
     { value: "Rand", type: 'function', press: 'Math.random()', display: '' },
-    { value: "0", type: 'number', press: '0', display: '0' },
-    { value: ".", type: 'period', press: '.', display: '.' },
-    { value: "=", type: 'operator', press: '=', display: '=' }
+    { value: "0", type: 'number', press: '0', display: '0', mobile: true},
+    { value: ".", type: 'period', press: '.', display: '.', mobile: true },
+    { value: "=", type: 'operator', press: '=', display: '=', mobile: true }
 ];
 
 // Math Utility Functions
@@ -284,14 +285,18 @@ function evaluateExpression(expr: string): number {
         atanh: Math.atanh,
 
         factorial: MathUtils.factorial,
-        negate: MathUtils.negate
+        negate: MathUtils.negate,
+          // Custom logarithm function: log base y of x is log(x) / log(y)
+        logy: (x: number, y: number): number => {
+            return Math.log(x) / Math.log(y);
+        }
     };
 
     try {
         // Preprocess the input expression to align it with the mathContext definitions
         const processedExpr = expr
             // Replace any Math.<function> calls with just <function> to match mathContext keys
-            .replace(/Math\.(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|asinh|acosh|atanh|sqrt|cbrt|log|log10|log2|exp)\(/g, '$1(')
+            .replace(/Math\.(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|asinh|acosh|atanh|sqrt|cbrt|log|logy|log10|log2|exp)\(/g, '$1(')
             .replace(/Math\.PI/g, 'PI')
             .replace(/Math\.E/g, 'E')
             .trim();
@@ -319,6 +324,8 @@ function createButtons(): void {
         if (buttonDetail.type === 'function' && /AC|\+\/-|%/.test(buttonDetail.value)) {
             button.classList.add('special-function');
         }
+
+        if (buttonDetail.mobile) button.classList.add('mobile');
         
         UI.buttonContainer?.appendChild(button);
     });
@@ -407,6 +414,18 @@ function handleButtonClick(buttonDetail: CalculatorButton, button: HTMLElement):
         button.classList.toggle('secondFunctionActive');
         return;
     }
+
+    if (buttonDetail.value === 'Rad' || buttonDetail.value === 'Deg') {
+        state.isRadianMode = !state.isRadianMode;
+        
+        // Update button text to reflect current mode
+        if (state.isRadianMode) {
+            button.textContent = 'Rad';
+        } else {
+            button.textContent = 'Deg';
+        }
+        return;
+    }
     
     // Reset display if starting fresh
     if (state.shouldStartFresh && state.lastResult !== null && 
@@ -469,6 +488,25 @@ function handleRegularButton(buttonDetail: CalculatorButton): void {
             state.computationString += pressValue;
             updateDisplay();
             return;
+        }
+
+        // Special handling for base-x logarithm and exponent functions
+        if (['xʸ', 'logᵧ', 'log₂'].includes(buttonDetail.value)) {
+            // If the next button is 0, handle it specifically
+            if (state.lastNumber === '0') {
+                if (buttonDetail.value === 'xʸ') {
+                    // For exponents, 0 as base is not meaningful
+                    state.currentDisplay += displayValue;
+                    state.computationString += pressValue;
+                } else if (['logᵧ', 'log₂'].includes(buttonDetail.value)) {
+                    // For log functions, 0 as base is not meaningful, so treat as normal input
+                    state.currentDisplay += displayValue;
+                    state.computationString += pressValue;
+                }
+                state.lastNumber = null;
+                updateDisplay();
+                return;
+            }
         }
         
         // Default case: Append both the display and computation values
