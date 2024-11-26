@@ -285,17 +285,14 @@ function evaluateExpression(expr: string): number {
 
         factorial: MathUtils.factorial,
         negate: MathUtils.negate,
-          // Custom logarithm function: log base y of x is log(x) / log(y)
-        logy: (x: number, y: number): number => {
-            return Math.log(x) / Math.log(y);
-        }
+       
     };
 
     try {
         // Preprocess the input expression to align it with the mathContext definitions
         const processedExpr = expr
             // Replace any Math.<function> calls with just <function> to match mathContext keys
-            .replace(/Math\.(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|asinh|acosh|atanh|sqrt|cbrt|log|logy|log10|log2|exp)\(/g, '$1(')
+            .replace(/Math\.(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|asinh|acosh|atanh|sqrt|cbrt|log|log10|log2|exp)\(/g, '$1(')
             .replace(/Math\.PI/g, 'PI')
             .replace(/Math\.E/g, 'E')
             .trim();
