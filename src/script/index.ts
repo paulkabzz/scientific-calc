@@ -489,25 +489,6 @@ function handleRegularButton(buttonDetail: CalculatorButton): void {
             return;
         }
 
-        // Special handling for base-x logarithm and exponent functions
-        if (['xʸ', 'logᵧ', 'log₂'].includes(buttonDetail.value)) {
-            // If the next button is 0, handle it specifically
-            if (state.lastNumber === '0') {
-                if (buttonDetail.value === 'xʸ') {
-                    // For exponents, 0 as base is not meaningful
-                    state.currentDisplay += displayValue;
-                    state.computationString += pressValue;
-                } else if (['logᵧ', 'log₂'].includes(buttonDetail.value)) {
-                    // For log functions, 0 as base is not meaningful, so treat as normal input
-                    state.currentDisplay += displayValue;
-                    state.computationString += pressValue;
-                }
-                state.lastNumber = null;
-                updateDisplay();
-                return;
-            }
-        }
-        
         // Default case: Append both the display and computation values
         state.currentDisplay += displayValue;
         state.computationString += pressValue;
