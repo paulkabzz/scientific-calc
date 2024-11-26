@@ -109,8 +109,7 @@ const MathUtils = {
     factorial: (n: number): number => {
         // Convert to number if it's a string
         const num = Number(n);
-        if (isNaN(num)) return NaN;
-        if (num < 0 || !Number.isInteger(num)) return NaN;  // Prevent factorial of negative and non-interger values
+        if (num < 0 || !Number.isInteger(num) || isNaN(num)) return NaN;  // Prevent factorial of negative and non-interger values
         if (num === 0) return 1;
         let result = 1;
         for (let i = num; i >= 1; i--) {
