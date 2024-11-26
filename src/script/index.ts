@@ -71,7 +71,7 @@ const buttonLayout: CalculatorButton[] = [
     { value: "²√x", type: 'function', press: 'Math.sqrt(', display: '√(' },
     { value: "³√x", type: 'function', press: 'Math.cbrt(', display: '∛(' },
     { value: "ʸ√x", type: 'function', press: '**(1/', display: '√' },
-    { value: "logᵧ", type: 'function', press: 'logy', display: 'log(', secondFunction: "ln", secondFnPress: 'Math.log(', secondFnDisplay: 'ln(' },
+    { value: "mod", type: 'function', press: '%', display: '%', secondFunction: "ln", secondFnPress: 'Math.log(', secondFnDisplay: 'ln(' },
     { value: "log₂", type: 'function', press: 'Math.log2(', display: 'log₂(', secondFunction: "log", secondFnPress: 'Math.log10(', secondFnDisplay: 'log(' },
     { value: "4", type: 'number', press: '4', display: '4', mobile: true },
     { value: "5", type: 'number', press: '5', display: '5', mobile: true },
